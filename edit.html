@@ -255,7 +255,7 @@ table { width: 100%; border-collapse: collapse; margin-top: 10px; } table th, ta
 // ------------------------------
 if(localStorage.getItem('isLoggedIn') !== 'true'){
     alert('Please login first!');
-    window.location.href = 'home.html';
+    window.location.href = 'index.html';
 }
 
 // ------------------------------
@@ -1015,7 +1015,7 @@ updateDateTime();
 document.getElementById('navLogout').addEventListener('click', ()=>{
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userEmail');
-    window.location.href = 'home.html';
+    window.location.href = 'index.html';
 });
 
 // ------------------------------
@@ -1023,7 +1023,7 @@ document.getElementById('navLogout').addEventListener('click', ()=>{
 // ------------------------------
 const AUTO_LOGOUT_TIME = 15*60*1000;
 let logoutTimer;
-function startLogoutTimer(){ logoutTimer = setTimeout(()=>{ alert("Logged out due to inactivity."); localStorage.removeItem('isLoggedIn'); localStorage.removeItem('userEmail'); window.location.href='home.html'; }, AUTO_LOGOUT_TIME); }
+function startLogoutTimer(){ logoutTimer = setTimeout(()=>{ alert("Logged out due to inactivity."); localStorage.removeItem('isLoggedIn'); localStorage.removeItem('userEmail'); window.location.href='index.html'; }, AUTO_LOGOUT_TIME); }
 function resetLogoutTimer(){ clearTimeout(logoutTimer); startLogoutTimer(); }
 document.addEventListener('mousemove', resetLogoutTimer);
 document.addEventListener('keydown', resetLogoutTimer);
@@ -1033,3 +1033,4 @@ startLogoutTimer();
 
 </body>
 </html>
+
