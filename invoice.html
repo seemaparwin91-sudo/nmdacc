@@ -476,7 +476,7 @@ h1 { text-align: center; color: #a8e6cf; }
     // ------------------------------
     if(localStorage.getItem('isLoggedIn') !== 'true'){
         alert('Please login first!');
-        window.location.href = 'home.html';
+        window.location.href = 'index.html';
     }
 
     // ===== Utilities =====
@@ -1013,7 +1013,7 @@ toggleBtn.addEventListener('click', ()=>{
     document.getElementById('navLogout').addEventListener('click', ()=>{
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('userEmail');
-        window.location.href = 'home.html';
+        window.location.href = 'index.html';
     });
 
     const AUTO_LOGOUT_TIME = 15*60*1000;
@@ -1023,7 +1023,7 @@ toggleBtn.addEventListener('click', ()=>{
             alert("You have been logged out due to inactivity.");
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('userEmail');
-            window.location.href = 'home.html';
+            window.location.href = 'index.html';
         }, AUTO_LOGOUT_TIME);
     }
     function resetLogoutTimer(){
@@ -1046,3 +1046,4 @@ toggleBtn.addEventListener('click', ()=>{
 
 </body>
 </html>
+
