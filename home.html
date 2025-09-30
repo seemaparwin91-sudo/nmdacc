@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMD Accountancy</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* ---------- Base Styles ---------- */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Inter, Segoe UI, Roboto, Arial;
+    }
+    body {
+        background-color: #0a0f0d;
+        color: #e0f2f1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* ---------- Banner / Welcome ---------- */
+    .banner {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        padding: 0 20px;
+        background: linear-gradient(135deg, #04100c, #0b2f26);
+    }
+    .banner h1, .banner p, .btn-login {
+        position: relative;
+        z-index: 1;
+    }
+    .banner h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #a8e6cf;
+        text-shadow: 1px 1px 4px #000;
+    }
+    .banner p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        color: #81c7b4;
+        text-shadow: 1px 1px 3px #000;
+    }
+    .btn-login {
+        padding: 12px 30px;
+        background-color: #2e7d6b;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+    .btn-login:hover {
+        background-color: #1b5e49;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.7);
+    }
+
+    /* ---------- Login Modal ---------- */
+    .modal {
+        display: none; /* hidden by default */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.85);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background-color: #0d2c24;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        height: 400px;
+        box-shadow: 0 0 20px #000;
+        position: relative;
+        color: #e0f2f1;
+        border: 1px solid #1b5e49;
+    }
+    .modal-content h2 {
+        margin-top: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+        color: #a8e6cf;
+    }
+    .modal-content label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #c8e6e0;
+    }
+    .modal-content input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #1b5e36;
+        border-radius: 6px;
+        background-color: #123822;
+        color: #e0f2f1;
+    }
+    .modal-content input::placeholder {
+        color: #81c7a5;
+    }
+    .modal-content button {
+        width: 100%;
+        padding: 12px;
+        background-color: #2e7d60;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, box-shadow 0.3s;
+        margin-top: 20px;
+    }
+    .modal-content button:hover {
+        background-color: #1b5e43;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    }
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        color: #81c7a5;
+        transition: color 0.3s;
+    }
+    .close-btn:hover {
+        color: #a8e6cf;
+    }
+
+    /* ---------- Floating Circles ---------- */
+.banner .circle {
+    position: absolute;
+    bottom: -50px; /* start just below the banner */
+    border-radius: 50%;
+    background-color: rgba(42, 157, 143, 0.3);
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(0.5); opacity: 0.3; }
+    50% { opacity: 0.6; }
+    100% { transform: translateY(-110vh) scale(1); opacity: 0; } /* float up full height */
+}
+
+/* Responsive font size adjustments */
+@media screen and (max-width: 768px) {
+    .watermark-footer {
+        font-size: 10px;
+        padding: 3px 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .watermark-footer {
+        font-size: 9px;
+        padding: 2px 5px;
+    }
+}
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 60px; /* space for Show/Hide text */
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 30%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #007b5e; /* adjust color as needed */
+    user-select: none;
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="banner">
+    <h1>Welcome to NMD Accountancy</h1>
+    <p>Professional Accounting, Auditing & Tax Consultants</p>
+    <button class="btn-login" id="loginBtn">Login</button>
+</div>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <h2>Login</h2>
+        <form id="loginForm">
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
+
+    <label for="password">Password</label>
+    <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <span id="togglePassword" class="toggle-password">Show</span>
+    </div>
+
+    <button type="submit">Login</button>
+</form>
+
+
+    </div>
+</div>
+
+<!-- Watermark Footer -->
+<div style="position: fixed; bottom: 0; right: 0; width: 100%; text-align: right; 
+            font-size: 12px; color: rgba(255,255,255,0.2); padding: 5px 20px; 
+            pointer-events: none; user-select: none; z-index: 9999;">
+    &copy; Developed by Grow More Solutions Pvt Ltd
+</div>
+
+<script>
+
+    // Show / Hide Password
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+
+togglePassword.addEventListener('click', () => {
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePassword.textContent = "Hide";
+    } else {
+        passwordInput.type = "password";
+        togglePassword.textContent = "Show";
+    }
+});
+
+
+    // ---------- Create floating circles ----------
+    const banner = document.querySelector('.banner');
+    for(let i = 0; i < 20; i++){
+        const circle = document.createElement('div');
+        circle.classList.add('circle');
+        const size = Math.random() * 40 + 20 + 'px'; // size 20-60px
+        circle.style.width = size;
+        circle.style.height = size;
+        circle.style.left = Math.random() * 100 + '%';
+        circle.style.animationDuration = (Math.random() * 20 + 10) + 's'; // 10-30s
+        circle.style.animationDelay = Math.random() * 10 + 's';
+        banner.appendChild(circle);
+    }
+
+    // ---------- Modal Handling ----------
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+
+    loginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+
+    // ---------- Login Validation ----------
+
+// ---------- Login Validation ----------
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    const validEmail = "nmdacc2018@gmail.com";
+    const validPassword = "Nmd@1234";
+
+    if(email === validEmail && password === validPassword){
+        alert("Login successful!");
+        loginModal.style.display = 'none';
+
+        // ✅ Store login info in localStorage for dashboard validation
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userEmail', email);
+
+        // Redirect to dashboard
+        window.location.href = "dashboard.html"; // your dashboard file
+    } else {
+        alert("Invalid email or password");
+    }
+});
+
+
+</script>
+
+</body>
+</html>

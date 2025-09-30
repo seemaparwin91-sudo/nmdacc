@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Statement Cover Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+body { font-family: Inter, Segoe UI, Roboto, Arial; margin: 0; background-color: #0a0f0d; color: #e0f2f1; }
+/* Sidebar */
+.sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100%; background-color: #123822; padding-top: 20px; display: flex; flex-direction: column; transition: width 0.3s; overflow: hidden; }
+.sidebar.collapsed { width: 60px; }
+.sidebar .logo { width: 120px; margin: 20px; margin-left: 60px; transition: width 0.3s, margin 0.3s; }
+.sidebar.collapsed .logo { margin-left: 10px; }
+.sidebar .logo img { width: 70%; border-radius: 100%; border: solid; border-color: aquamarine; }
+.sidebar.collapsed .logo img { width: 30%; }
+.sidebar a { padding: 15px 20px; text-decoration: none; color: #e0f2f1; display: flex; align-items: center; gap: 10px; transition: 0.3s; font-weight: 500; }
+.sidebar.collapsed a span.text { display: none; }
+.sidebar a svg { width: 20px; height: 20px; fill: #e0f2f1; }
+.sidebar a:hover { background-color: #2e7d60; }
+.sidebar a.active { background-color: #1b5e43; }
+/* Sidebar toggle button */
+#sidebarToggle { cursor: pointer; color: #a8e6cf; font-size: 1.5rem; text-align: center; margin-bottom: 20px; transition: transform 0.3s; }
+#sidebarToggle.collapsed { transform: rotate(180deg); }
+/* Main content */
+/* Main Content Styling */
+.main-content { margin-left: 220px; /* Adjust according to sidebar */ padding: 30px 40px; transition: margin-left 0.3s; background-color: #0a0f0d; min-height: 100vh; }
+.sidebar.collapsed ~ .main-content { margin-left: 60px;}
+/* Top Bar */
+#topBar { display: flex; justify-content: flex-end; align-items: center; gap: 20px; margin-bottom: 30px; font-weight: 500; color: #a8e6cf; font-size: 0.95rem;}
+/* Change calendar icon color to green */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(82%) saturate(550%) hue-rotate(90deg);
+    cursor: pointer;
+}
+
+/* Input Section */
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* space between fields */
+    background: #123822; 
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 900px; 
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Labels */
+.input-section label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #a8e6cf;
+    font-size: 0.95rem;
+}
+
+/* Inputs */
+.input-section input {
+    margin-top: 6px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #1b5e36;
+    background-color: #0a0f0d;
+    color: #e0f2f1;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+    width: 97%;
+}
+
+.input-section input:focus {
+    border-color: #2e7d60;
+    box-shadow: 0 0 6px rgba(168,230,207,0.5);
+}
+
+/* Button */
+.input-section button {
+    background: #2e7d60;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 1rem;
+}
+
+.input-section button:hover {
+    background: #1b5e43;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    .input-section {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .input-section label {
+        font-size: 0.9rem;
+    }
+
+    .input-section input,
+    .input-section button {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
+/* Cover page preview styling */
+#coverPreview {
+    margin-top: 20px;
+    width: 210mm;
+    height: 297mm;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.1);
+    padding: 20mm;
+    box-sizing: border-box;
+}
+.cover-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-transform: uppercase;
+    font-family: "Times New Roman", Times, serif;
+}
+.client-info {
+    margin-top: 40px;
+}
+
+.main-content h1 {
+    color: #a8e6cf;
+}
+.client-name { font-size: 20px; font-weight: bold;  text-align: center;}
+.client-address { font-size: 13px; font-weight: bold; line-height: 1.4; text-align: center;}
+.statement-title { text-align: center; font-size: 18px; font-weight: bold; margin-top: auto; margin-bottom: auto; }
+.statement-subtitle { text-align: center; font-size: 18px; font-weight: bold; }
+.company-info { text-align: center; font-weight: bold; font-size: 14px; line-height: 1.3; margin-bottom: 75px;}
+.company-logo { max-width: 350px;  }
+@media print {
+    body { margin:0; -webkit-print-color-adjust:exact; color:#000; }
+    #coverPreview { box-shadow:none; width:210mm; height:297mm; padding:20mm; }
+}
+
+/* Small screens (mobile) */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 60px; /* collapse sidebar on mobile */
+    }
+    .sidebar.collapsed {
+        width: 60px;
+    }
+    .sidebar .logo {
+        margin-left: 10px;
+        width: 80px;
+    }
+    .sidebar .logo img {
+        width: 40%;
+    }
+    .sidebar a span.text {
+        display: none; /* hide sidebar labels */
+    }
+    .main-content {
+        margin-left: 60px; /* adjust content margin */
+        padding: 20px;
+    }
+
+    /* Top Bar */
+    #topBar {
+        flex-wrap: wrap; /* allow wrapping */
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+
+    /* Headings */
+    .main-content h1 {
+        font-size: 1.5rem;
+    }
+
+}
+
+/* Medium screens (tablets) */
+@media screen and (max-width: 1024px) {
+    .main-content {
+        padding: 25px 40px;
+    }
+
+    .main-content h1 {
+        font-size: 1.75rem;
+    }
+
+    #topBar {
+        font-size: 0.9rem;
+        gap: 15px;
+    }
+}
+
+/* Extra small screens (phones) */
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 15px 20px;
+    }
+
+    .sidebar .logo {
+        width: 70px;
+    }
+
+    .sidebar .logo img {
+        width: 35%;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div id="sidebarToggle">◀</div>
+    <div class="logo">
+        <img src="invoice.jpg" alt="NMD Accountancy Logo">
+    </div>
+    <a href="dashboard.html" id="navDashboard">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z"/></svg>
+        <span class="text">Dashboard</span>
+    </a>
+    <a href="clients.html">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span class="text">Add Clients</span>
+    </a>
+    <a href="invoice.html" id="navCreate">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2V5a2 2 0 00-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <span class="text">Create Invoice</span>
+    </a>
+    <a href="edit.html" id="navSaved">
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        <span class="text">Manage Invoices</span>
+    </a>
+    <a href="cover.html" id="navDownload">
+        <svg viewBox="0 0 24 24" width="24" height="24"> <path d="M19 8H5c-1.1 0-2 .9-2 2v6h4v4h10v-4h4v-6c0-1.1-.9-2-2-2zm-1 8H6v-5h12v5zm-5-9h-2V3h2v4z"/></svg>
+        <span class="text">Cover Page</span>
+    </a>
+   <a href="#" id="navLogout">
+        <svg viewBox="0 0 24 24"><path d="M16 13v-2H7V7l-5 5 5 5v-4h9zm3-10H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        <span class="text">Logout</span>
+    </a>
+</div>
+
+<div class="main-content">
+    <div id="topBar">
+        <span id="adminName">Admin: NMD Accountancy</span>
+        <span id="systemDateTime"></span>
+    </div>
+
+    <h1>Financial Statement Cover Page</h1>
+
+    <div class="input-section">
+        <label>Client Name: 
+            <input list="clientsList" id="clientNameInput" placeholder="Select or type client name">
+            <datalist id="clientsList"></datalist>
+        </label>
+        <label>Client Address Line 1: <input type="text" id="clientAddress1" placeholder="Address line 1"></label>
+        <label>Client Address Line 2: <input type="text" id="clientAddress2" placeholder="Address line 2"></label>
+        <label>Statement Date: <input type="date" id="statementDate"></label>
+        <button id="generateCover">Print / PDF</button>
+    </div>
+
+    <div id="coverPreview"></div>
+</div>
+
+<script>
+
+    function formatDateToCover(dateStr) {
+    if (!dateStr) return "31ST OF MARCH 2024"; // fallback
+    
+    const date = new Date(dateStr);
+
+    const day = date.getDate();
+    const month = date.toLocaleString("en-US", { month: "long" });
+    const year = date.getFullYear();
+
+    // Get ordinal suffix
+    const getOrdinal = (n) => {
+        if (n > 3 && n < 21) return "TH"; // 11th, 12th, 13th
+        switch (n % 10) {
+            case 1: return "ST";
+            case 2: return "ND";
+            case 3: return "RD";
+            default: return "TH";
+        }
+    };
+
+    return `${day}${getOrdinal(day)} OF ${month.toUpperCase()} ${year}`;
+}
+
+// Example:
+console.log(formatDateToCover("2024-03-31")); 
+// 👉 "31ST OF MARCH 2024"
+
+
+    // Populate client dropdown from localStorage
+    function populateClientsDropdown(){
+        const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+        const dataList = document.getElementById('clientsList');
+        dataList.innerHTML = '';
+        clients.forEach(c => {
+            const option = document.createElement('option');
+            option.value = c.name;
+            dataList.appendChild(option);
+        });
+    }
+    populateClientsDropdown();
+
+    // Auto-fill address if client selected
+    function autoFillAddress(){
+        const clientName = document.getElementById('clientNameInput').value;
+        const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+        const client = clients.find(c => c.name.toLowerCase() === clientName.toLowerCase());
+        if(client){
+            const parts = client.location.split(',');
+            document.getElementById('clientAddress1').value = (parts[0] || '').trim();
+            document.getElementById('clientAddress2').value = (parts[1] || '').trim();
+        }
+    }
+
+    // Generate cover page HTML
+    function generateCoverHTML(){
+        const clientName = document.getElementById('clientNameInput').value.toUpperCase();
+        const addr1 = document.getElementById('clientAddress1').value.toUpperCase();
+        const addr2 = document.getElementById('clientAddress2').value.toUpperCase();
+        const statementDateRaw = document.getElementById('statementDate').value;
+        const statementDate = 
+            statementDateRaw 
+    ? formatDateToCover(statementDateRaw) 
+    : '31ST OF MARCH 2024';
+
+
+        return `
+        <div class="cover-page">
+            <div class="client-info">
+                <div class="client-name">M/S. ${clientName}</div>
+                <div class="client-address">${addr1},<br>${addr2}</div>
+            </div>
+
+            <div>
+                <div class="statement-title">FINANCIAL STATEMENT</div>
+                <div class="statement-subtitle">FOR THE YEAR ENDED, ${statementDate}</div>
+            </div>
+
+            <div class="company-info">
+                <img src="NMD-01.png" class="company-logo"><br>
+                NO. 25/4 SRI PALA BINDU MAWATHA,<br>
+                SEDAWATTA,<br>
+                WELLAMPITIYA.
+            </div>
+        </div>`;
+    }
+
+    // Live preview
+    function updateCoverPreview(){
+        autoFillAddress();
+        document.getElementById('coverPreview').innerHTML = generateCoverHTML();
+    }
+
+    ['clientNameInput','clientAddress1','clientAddress2','statementDate'].forEach(id=>{
+        document.getElementById(id).addEventListener('input', updateCoverPreview);
+    });
+
+    // Initial preview
+    updateCoverPreview();
+
+    // Print / PDF button
+    document.getElementById('generateCover').addEventListener('click', function(){
+        const coverHTML = generateCoverHTML();
+
+        // Print
+const css = `
+    <style>
+        body { margin:0; font-family: "Times New Roman", Times, serif;; text-transform:uppercase; }
+.cover-page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-transform: uppercase;
+}
+.client-info {
+    margin-top: 50px;
+}
+.client-name { font-size: 20px; font-weight: bold;  text-align: center;}
+.client-address { font-size: 13px; font-weight: bold; line-height: 1.4; text-align: center;}
+.statement-title { text-align: center; font-size: 19px; font-weight: bold; margin-top: auto; margin-bottom: auto; }
+.statement-subtitle { text-align: center; font-size: 19px; font-weight: bold; }
+.company-info { text-align: center; font-weight: bold; font-size: 14px; line-height: 1.3; margin-bottom: 75px;}
+.company-logo { max-width: 350px;  }
+@media print {
+    body { margin:0; -webkit-print-color-adjust:exact; color:#000; }
+    #coverPreview { box-shadow:none; width:210mm; height:297mm; padding:20mm; }
+}
+    </style>
+`;
+
+const w = window.open('', '', 'width=900,height=1200');
+w.document.write('<html><head><title>Cover Page</title>');
+w.document.write('<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap" rel="stylesheet">');
+w.document.write(css); // ✅ inject CSS
+w.document.write('</head><body>');
+w.document.write(coverHTML);
+w.document.write('</body></html>');
+w.document.close();
+w.focus();
+w.print();
+
+
+        // PDF download
+        html2pdf().set({margin:0, filename:'Financial_Statement_Cover.pdf', pagebreak:{mode:['avoid-all','css']}, jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}})
+        .from(coverHTML)
+        .save();
+    });
+
+    // ------------------------------
+// COLLAPSIBLE SIDEBAR
+// ------------------------------
+const sidebar = document.querySelector('.sidebar');
+const toggleBtn = document.getElementById('sidebarToggle');
+toggleBtn.addEventListener('click', ()=>{
+    sidebar.classList.toggle('collapsed');
+    toggleBtn.classList.toggle('collapsed');
+});
+
+// ------------------------------
+// LIVE DATE & TIME
+// ------------------------------
+function updateDateTime(){
+    const now = new Date();
+    const options={ weekday:'short', year:'numeric', month:'short', day:'numeric',
+        hour:'2-digit', minute:'2-digit', second:'2-digit'};
+    document.getElementById('systemDateTime').textContent = now.toLocaleDateString('en-US', options);
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+    // ------------------------------
+    // LOGOUT & INACTIVITY (existing)
+    // ------------------------------
+    document.getElementById('navLogout').addEventListener('click', ()=>{
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'home.html';
+    });
+
+    const AUTO_LOGOUT_TIME = 15*60*1000;
+    let logoutTimer;
+    function startLogoutTimer(){
+        logoutTimer = setTimeout(()=>{
+            alert("You have been logged out due to inactivity.");
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'home.html';
+        }, AUTO_LOGOUT_TIME);
+    }
+    function resetLogoutTimer(){
+        clearTimeout(logoutTimer);
+        startLogoutTimer();
+    }
+    document.addEventListener('mousemove', resetLogoutTimer);
+    document.addEventListener('keydown', resetLogoutTimer);
+    document.addEventListener('click', resetLogoutTimer);
+    startLogoutTimer();
+
+</script>
+
+</body>
+</html>
